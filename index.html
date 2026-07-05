@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeeDoh Lab - Custom Squishy Creator</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="logo-icon">🔮</span>
+                <div class="logo-text">
+                    <h1>NeeDoh Lab</h1>
+                    <p>The Groovy Glob Generator</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button id="sound-toggle" class="icon-btn" title="Toggle Sound FX">
+                    <i data-lucide="volume-2"></i>
+                </button>
+                <button id="gallery-btn" class="secondary-btn">
+                    <i data-lucide="sparkles"></i> My Collection
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- 3D Visualizer Viewport -->
+            <section class="visualizer-section">
+                <div id="canvas-container">
+                    <!-- WebGL Canvas will be injected here -->
+                    <div class="loading-overlay" id="loading-overlay">
+                        <div class="spinner"></div>
+                        <p>Cooking up your glob...</p>
+                    </div>
+                </div>
+
+                <!-- Floating Canvas Actions -->
+                <div class="canvas-instructions">
+                    <span class="instruction-badge">
+                        <i data-lucide="mouse-pointer"></i> Drag to Rotate
+                    </span>
+                    <button id="squeeze-btn" class="instruction-badge highlight">
+                        <i data-lucide="hand"></i> Click & Hold to Squeeze!
+                    </button>
+                </div>
+
+                <!-- Preset Quick Picks -->
+                <div class="presets-container">
+                    <span class="presets-title">Presets:</span>
+                    <div class="preset-buttons">
+                        <button class="preset-btn active" data-preset="classic-pink">Classic Pink</button>
+                        <button class="preset-btn" data-preset="nice-cube">Maltose Blue Cube</button>
+                        <button class="preset-btn" data-preset="cool-cat">Cool Mint Cat</button>
+                        <button class="preset-btn" data-preset="water-beads">Crunchy Beads</button>
+                        <button class="preset-btn" data-preset="glitter-gel">Galaxy Gel</button>
+                        <button class="preset-btn" data-preset="stardust">Stardust Shimmer</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customizer Sidebar -->
+            <section class="customizer-sidebar">
+                <!-- Navigation Tabs -->
+                <nav class="customizer-tabs">
+                    <button class="tab-btn active" data-tab="shape" title="Shape & Size">
+                        <i data-lucide="shapes"></i>
+                        <span>Shape</span>
+                    </button>
+                    <button class="tab-btn" data-tab="filling" title="Filling & Texture">
+                        <i data-lucide="droplet"></i>
+                        <span>Filling</span>
+                    </button>
+                    <button class="tab-btn" data-tab="color" title="Color & Effects">
+                        <i data-lucide="palette"></i>
+                        <span>Color</span>
+                    </button>
+                    <button class="tab-btn" data-tab="details" title="Expressions & Faces">
+                        <i data-lucide="smile"></i>
+                        <span>Details</span>
+                    </button>
+                    <button class="tab-btn" data-tab="packaging" title="Box & Packaging">
+                        <i data-lucide="box"></i>
+                        <span>Packaging</span>
+                    </button>
+                </nav>
+
+                <!-- Tab Content Panels -->
+                <div class="tab-panels">
+                    
+                    <!-- Panel 1: Shape & Size -->
+                    <div class="tab-panel active" id="panel-shape">
+                        <h2>Choose Shape & Size</h2>
+                        
+                        <div class="control-group">
+                            <label>Base Geometry</label>
+                            <div class="card-grid">
+                                <button class="choice-card active" data-control="shape" data-value="glob">
+                                    <span class="card-icon">🔵</span>
+                                    <span class="card-label">Classic Glob</span>
+                                </button>
+                                <button class="choice-card" data-control="shape" data-value="cube">
+                                    <span class="card-icon">🟩</span>
+                                    <span class="card-label">Nice Cube</span>
+                                </button>
+                                <button class="choice-card" data-control="shape" data-value="cat">
+                                    <span class="card-icon">🐱</span>
+                                    <span class="card-label">Cool Cat</span>
+                                </button>
+                                <button class="choice-card" data-control="shape" data-value="donut">
+                                    <span class="card-icon">🍩</span>
+                                    <span class="card-label">Doh-Nut</span>
+                                </button>
+                                <button class="choice-card" data-control="shape" data-value="gumdrop">
+                                    <span class="card-icon">🔺</span>
+                                    <span class="card-label">Gumdrop</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Squishy Size</label>
+                            <div class="size-selector">
+                                <button class="size-btn" data-control="size" data-value="teenie">Teenie</button>
+                                <button class="size-btn active" data-control="size" data-value="classic">Classic</button>
+                                <button class="size-btn" data-control="size" data-value="super">Super</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 2: Filling & Texture -->
+                    <div class="tab-panel" id="panel-filling">
+                        <h2>Physical Feel & Shell</h2>
+                        
+                        <div class="control-group">
+                            <label>Interior Filling</label>
+                            <div class="card-grid cols-2">
+                                <button class="choice-card active" data-control="filling" data-value="dough">
+                                    <span class="card-label">Groovy Dough</span>
+                                    <span class="card-desc">Thick, slow-rise PVA compound</span>
+                                </button>
+                                <button class="choice-card" data-control="filling" data-value="maltose">
+                                    <span class="card-label">Maltose Firmer</span>
+                                    <span class="card-desc">Firm, holds squish shape briefly</span>
+                                </button>
+                                <button class="choice-card" data-control="filling" data-value="beads">
+                                    <span class="card-label">Water Beads</span>
+                                    <span class="card-desc">Crunchy, tactile spheres inside</span>
+                                </button>
+                                <button class="choice-card" data-control="filling" data-value="gel">
+                                    <span class="card-label">Glitter Gel</span>
+                                    <span class="card-desc">Viscous clear gel with glitter flakes</span>
+                                </button>
+                                <button class="choice-card" data-control="filling" data-value="shimmer">
+                                    <span class="card-label">Stardust Liquid</span>
+                                    <span class="card-desc">Swirling, metallic shimmer dust</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Outer Shell Material</label>
+                            <div class="segmented-control">
+                                <button class="segment-btn active" data-control="material" data-value="glossy">Glossy</button>
+                                <button class="segment-btn" data-control="material" data-value="matte">Matte</button>
+                                <button class="segment-btn" data-control="material" data-value="translucent">Translucent</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Surface Texture</label>
+                            <div class="card-grid cols-3">
+                                <button class="choice-card active" data-control="texture" data-value="smooth">
+                                    <span class="card-label-small">Smooth</span>
+                                </button>
+                                <button class="choice-card" data-control="texture" data-value="spikes">
+                                    <span class="card-label-small">Spiky</span>
+                                </button>
+                                <button class="choice-card" data-control="texture" data-value="ribbed">
+                                    <span class="card-label-small">Ribbed</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 3: Color & Special Effects -->
+                    <div class="tab-panel" id="panel-color">
+                        <h2>Color & Special Effects</h2>
+                        
+                        <div class="control-group">
+                            <label>Base Shell Color</label>
+                            <div class="color-palette" id="shell-colors">
+                                <!-- Generated Dynamically or Static -->
+                                <button class="color-swatch active" style="background-color: #ff2a85;" data-color="#ff2a85"></button>
+                                <button class="color-swatch" style="background-color: #00ffaa;" data-color="#00ffaa"></button>
+                                <button class="color-swatch" style="background-color: #00c3ff;" data-color="#00c3ff"></button>
+                                <button class="color-swatch" style="background-color: #ffae00;" data-color="#ffae00"></button>
+                                <button class="color-swatch" style="background-color: #a600ff;" data-color="#a600ff"></button>
+                                <button class="color-swatch" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                            </div>
+                            <div class="custom-color-picker">
+                                <span>Custom:</span>
+                                <input type="color" id="custom-shell-color" value="#ff2a85">
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="core-color-group">
+                            <label>Core / Inner Color (revealed when squeezed)</label>
+                            <div class="color-palette" id="core-colors">
+                                <button class="color-swatch active" style="background-color: #00ffaa;" data-color="#00ffaa"></button>
+                                <button class="color-swatch" style="background-color: #ffae00;" data-color="#ffae00"></button>
+                                <button class="color-swatch" style="background-color: #ff2a85;" data-color="#ff2a85"></button>
+                                <button class="color-swatch" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Special Shell Effects</label>
+                            <div class="toggle-control">
+                                <div class="toggle-info">
+                                    <span class="toggle-label">Thermochromic (Color-Change)</span>
+                                    <span class="toggle-desc">Changes color when squeezed or touched</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="effect-thermo">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 4: Expressions & Faces -->
+                    <div class="tab-panel" id="panel-details">
+                        <h2>Expressions & Decor</h2>
+                        
+                        <div class="control-group">
+                            <label>Face Print</label>
+                            <div class="card-grid cols-2">
+                                <button class="choice-card active" data-control="face" data-value="none">
+                                    <span class="card-label">No Face</span>
+                                </button>
+                                <button class="choice-card" data-control="face" data-value="smiley">
+                                    <span class="card-icon">🙂</span>
+                                    <span class="card-label">Smiley</span>
+                                </button>
+                                <button class="choice-card" data-control="face" data-value="cool">
+                                    <span class="card-icon">😎</span>
+                                    <span class="card-label">Cool Cats</span>
+                                </button>
+                                <button class="choice-card" data-control="face" data-value="derp">
+                                    <span class="card-icon">🤪</span>
+                                    <span class="card-label">Derpy</span>
+                                </button>
+                                <button class="choice-card" data-control="face" data-value="grumpy">
+                                    <span class="card-icon">😠</span>
+                                    <span class="card-label">Grumpy</span>
+                                </button>
+                                <button class="choice-card" data-control="face" data-value="sleepy">
+                                    <span class="card-icon">😴</span>
+                                    <span class="card-label">Sleepy</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 5: Packaging -->
+                    <div class="tab-panel" id="panel-packaging">
+                        <h2>Box & Custom Graphics</h2>
+                        
+                        <div class="control-group">
+                            <label>Package Box Type</label>
+                            <div class="card-grid cols-3">
+                                <button class="choice-card active" data-control="box-type" data-value="retro">
+                                    <span class="card-label-small">Retro Box</span>
+                                </button>
+                                <button class="choice-card" data-control="box-type" data-value="foil">
+                                    <span class="card-label-small">Foil Bag</span>
+                                </button>
+                                <button class="choice-card" data-control="box-type" data-value="cylinder">
+                                    <span class="card-label-small">Clear Cylinder</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Custom Label Text</label>
+                            <input type="text" id="custom-label" placeholder="e.g. MY GROOVY GLOB" maxlength="15">
+                        </div>
+
+                        <div class="control-group">
+                            <label>Show Packaging In Preview</label>
+                            <div class="toggle-control">
+                                <div class="toggle-info">
+                                    <span class="toggle-label">Render Box model</span>
+                                    <span class="toggle-desc">See the box around your NeeDoh</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="show-box-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Summary / CTA -->
+                <div class="sidebar-footer">
+                    <div class="summary-details">
+                        <span class="price-estimate">$12.99</span>
+                        <span class="build-spec" id="spec-text">Classic • Opaque Dough</span>
+                    </div>
+                    <div class="footer-buttons">
+                        <button id="save-design-btn" class="secondary-btn">
+                            <i data-lucide="plus"></i> Save Design
+                        </button>
+                        <button id="order-btn" class="primary-btn">
+                            Order Squishy!
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Collection Gallery Modal (Initially Hidden) -->
+        <div class="modal-backdrop" id="gallery-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i data-lucide="sparkles"></i> My Saved Creations</h2>
+                    <button class="close-modal-btn" id="close-gallery"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="gallery-grid" id="gallery-grid">
+                        <!-- Dynamically filled with saved items -->
+                    </div>
+                    <div class="empty-gallery-state" id="empty-gallery-state">
+                        <p class="emoji">🔮</p>
+                        <p class="title">Your collection is empty</p>
+                        <p class="desc">Create a custom squishy and click "Save Design" to add it to your lab gallery!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout / Success Modal (Initially Hidden) -->
+        <div class="modal-backdrop" id="checkout-modal">
+            <div class="modal-content text-center">
+                <div class="modal-header justify-center">
+                    <h2>🎉 Order Placed!</h2>
+                </div>
+                <div class="modal-body">
+                    <p class="large-emoji">📦</p>
+                    <h3>Your custom NeeDoh is heading to the factory!</h3>
+                    <p class="desc">We are mixing the premium PVA compound and styling the thermoplastic shell to your exact specs.</p>
+                    
+                    <div class="summary-receipt">
+                        <h4>Your Build Specifications:</h4>
+                        <ul id="receipt-specs">
+                            <!-- Populated on order -->
+                        </ul>
+                    </div>
+
+                    <button class="primary-btn mt-2" id="close-checkout">Create Another!</button>
+                    
+                    <!-- Safety Guidelines notice in checkout -->
+                    <div class="safety-alert">
+                        <strong>⚠️ Care Instructions:</strong>
+                        <p>Wash with warm water and soap if dirty. Coat with baby powder to restore its soft velvet texture. <strong>Do not microwave. Do not freeze.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- App Scripts -->
+    <script type="module" src="sound.js"></script>
+    <script type="module" src="visualizer.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

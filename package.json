@@ -1,0 +1,14 @@
+{
+  "name": "nido-generator",
+  "version": "1.0.0",
+  "description": "NeeDoh Squishy Lab Custom Generator",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
