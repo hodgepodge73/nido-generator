@@ -4,7 +4,7 @@
   "description": "NeeDoh Squishy Lab Custom Generator",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },

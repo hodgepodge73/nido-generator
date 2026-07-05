@@ -307,6 +307,42 @@ document.addEventListener('DOMContentLoaded', () => {
         galleryModal.classList.remove('open');
     });
 
+    // Download Image Button Handler
+    const downloadBtn = document.getElementById('download-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            // Flash feedback animation on button
+            const icon = downloadBtn.querySelector('i');
+            const originalIcon = icon.getAttribute('data-lucide');
+            
+            icon.setAttribute('data-lucide', 'check');
+            downloadBtn.style.color = 'var(--neon-green)';
+            downloadBtn.style.borderColor = 'var(--neon-green)';
+            downloadBtn.style.background = 'rgba(0, 255, 170, 0.15)';
+            lucide.createIcons();
+
+            setTimeout(() => {
+                icon.setAttribute('data-lucide', originalIcon);
+                downloadBtn.style.color = '';
+                downloadBtn.style.borderColor = '';
+                downloadBtn.style.background = '';
+                lucide.createIcons();
+            }, 1500);
+
+            // Generate PNG data URL
+            const dataURL = visualizer.takeScreenshot();
+            
+            // Trigger browser download
+            const link = document.createElement('a');
+            const fileName = (visualizer.config.customLabel || 'my_needoh').trim().toLowerCase().replace(/\s+/g, '_');
+            link.download = `${fileName}_needoh.png`;
+            link.href = dataURL;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+
     // Add Design Button Handler
     const saveDesignBtn = document.getElementById('save-design-btn');
     saveDesignBtn.addEventListener('click', () => {

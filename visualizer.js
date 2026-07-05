@@ -57,7 +57,7 @@ export class Visualizer {
 
     init() {
         // 1. Create WebGL Renderer
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.shadowMap.enabled = true;
@@ -969,5 +969,11 @@ export class Visualizer {
         } else if (key === 'showBox' || key === 'boxType' || key === 'customLabel') {
             this.updatePackaging();
         }
+    }
+
+    // Capture the WebGL canvas as a PNG data URL
+    takeScreenshot() {
+        this.renderer.render(this.scene, this.camera);
+        return this.renderer.domElement.toDataURL('image/png');
     }
 }
